@@ -34,8 +34,7 @@ def invoke_question(search_string, context_str, chat_model):
     print(prompt_value)
 
 if __name__=="__main__":
-    embeddings = create_database.build_embeddings(EMBEDDING_MDL)
-    db = create_database.build_vectorstore(embeddings, db_path=DB_PATH)
+    db = create_database.load_vectorstore(db_path=DB_PATH)
     query_content = similarity_search(search_string="长妈妈是怎样的人", num_chunks=15, db=db)
     chat_model = build_chat_model("llama3:latest")
     invoke_question("长妈妈是怎样的人", query_content, chat_model)

@@ -21,11 +21,17 @@ def load_documents(path: str):
 def build_embeddings(model: str = EMBEDDING_MDL):
     return OllamaEmbeddings(model=model)
 
+def load_vectorstore(embeddings=None, db_path: str = DB_PATH):
+    chroma_kwargs = {
+        "persist_directory": db_path,
+    }
+    if embeddings is not None:
+        chroma_kwargs["embedding_function"] = embeddings
+
+    return Chroma(**chroma_kwargs)
+
 def build_vectorstore(embeddings, db_path: str = DB_PATH):
-    return Chroma(
-        embedding_function=embeddings,
-        persist_directory=db_path,
-    )
+    return load_vectorstore(embeddings, db_path=db_path)
 
 def build_chunk_id(chunk):
     source = chunk.metadata.get("source", "")
@@ -55,7 +61,7 @@ def create_db(data_path=DATA_PATH, embed_model=EMBEDDING_MDL, db_path=DB_PATH, r
         shutil.rmtree(db_directory)
 
     embeddings = build_embeddings(embed_model)
-    vectorstore = build_vectorstore(embeddings, db_path=db_path)
+    vectorstore = load_vectorstore(embeddings, db_path=db_path)
     vectorstore.add_documents(documents=chunks, ids=chunk_ids)
 
     return vectorstore

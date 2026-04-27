@@ -1,6 +1,7 @@
 import argparse
 import create_database
 import query_database
+from langchain_ollama import OllamaEmbeddings
 
 DATA_PATH = "data/books"
 DB_PATH = "./chroma_langchain_db"
@@ -50,8 +51,8 @@ if __name__=="__main__":
     if args.mode == "embedding":
         create_database.create_db(embed_model=args.embed_model, db_path=DB_PATH)
     elif args.mode == "retrieve":
-        embeddings = create_database.build_embeddings(args.embed_model)
-        db = create_database.build_vectorstore(embeddings, db_path=DB_PATH)
+        embeddings = OllamaEmbeddings(model = args.embed_model)
+        db = create_database.load_vectorstore(embeddings, db_path=DB_PATH)
         chat_model = query_database.build_chat_model(args.chat_model)
         query_content = query_database.similarity_search(
             search_string=args.question,

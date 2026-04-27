@@ -6,7 +6,7 @@ DATA_PATH = "data/books"
 DB_PATH = "./chroma_langchain_db"
 EMBEDDING_MDL = "shaw/dmeta-embedding-zh:latest"
 CHAT_MDL = "llama3:latest"
-DEFAULT_NUM_CHUNKS = 15
+DEFAULT_NUM_CHUNKS = 8
 
 def argment_parser():
     parser = argparse.ArgumentParser(
